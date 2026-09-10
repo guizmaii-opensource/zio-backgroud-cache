@@ -12,7 +12,7 @@ object BackgroundCacheMetricsSpec extends ZIOSpecDefault {
   private def pointFor[T <: PointData](data: List[MetricData[T]], metricName: String, cache: String): Option[T] =
     data.filter(_.name == metricName).flatMap(_.points).find(_.attributes.asMap.get("cache").contains(cache))
 
-  def spec: Spec[TestEnvironment with Scope, Any] =
+  def spec: Spec[TestEnvironment & Scope, Any] =
     suite("BackgroundCacheMetricsSpec")(
       test("tags every recorded point with the cache attribute, and records success/failure independently per cache") {
         for {
@@ -37,6 +37,6 @@ object BackgroundCacheMetricsSpec extends ZIOSpecDefault {
           pointFor(histograms, "background_cache.refresh.duration", "gadgets").exists(_.count == 1L)
         )
       }
-    ).provideSomeLayer[TestEnvironment with Scope](OpenTelemetryTestkit.ctxStorageZioFiberRef >>> MeterTestkit.inMemory)
+    ).provideSomeLayer[TestEnvironment & Scope](OpenTelemetryTestkit.ctxStorageZioFiberRef >>> MeterTestkit.inMemory)
 
 }

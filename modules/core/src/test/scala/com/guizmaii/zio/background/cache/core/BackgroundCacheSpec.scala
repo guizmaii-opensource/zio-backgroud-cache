@@ -30,7 +30,7 @@ object BackgroundCacheSpec extends ZIOSpecDefault {
       case CacheState.Degraded(_, t, _) => Some(t)
     }
 
-  def spec: Spec[TestEnvironment with Scope, Any] = suite("BackgroundCacheSpec")(
+  def spec: Spec[TestEnvironment & Scope, Any] = suite("BackgroundCacheSpec")(
     suite("BackgroundCache.make")(
       test("starts in Loading before the first fetch completes, then becomes Healthy") {
         for {
